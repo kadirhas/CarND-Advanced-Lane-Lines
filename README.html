@@ -1,0 +1,42 @@
+<!DOCTYPE html []>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="MarkdownViewer++" />
+    <title>README.md</title>
+    <style type="text/css">
+            /* Avoid page breaks inside the most common attributes, especially for exports (i.e. PDF) */
+td, h1, h2, h3, h4, h5, p, ul, ol, li {
+    page-break-inside: avoid; 
+}
+
+            
+        </style>
+  </head>
+  <body>
+    <h2>Advanced Lane Finding</h2>
+    <p>In this project, a robust lane detection algorithm which can also provide curvature of the road and the lateral position of the vehicle with respect to the center of the lane has been developed. In the following section, all of the criterias will be addressed. Brief explanation of how the code is working will also be provided.</p>
+    <h2>The Project Rubric</h2>
+    <h1>Readme</h1>
+    <h4>The writeup / README should include a statement and supporting figures / images that explain how each rubric item was addressed, and specifically where in the code each step was handled.</h4>
+    <p>This document is provided for this purpose</p>
+    <h1>Camera Calibration</h1>
+    <h4>Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.</h4>
+    <p>The provided chessboard pictures first converted to grayscale. Then with the opencv function each corner of the chessboard is found.
+<img src="./output_images/chessboard_calibration.png" alt="alt text" title="Chessboard calibration" />
+Since the distance of the each corner of a chessboard should be equal, the image is adjusted with this information via opencv function. The result of the calibration is below:
+<img src="./output_images/undistort.png" alt="alt text" title="Undistorting the image" /></p>
+    <ul>
+      <li>Compute the camera calibration matrix and distortion coefficients given a set of chessboard images.</li>
+      <li>Apply a distortion correction to raw images.</li>
+      <li>Use color transforms, gradients, etc., to create a thresholded binary image.</li>
+      <li>Apply a perspective transform to rectify binary image ("birds-eye view").</li>
+      <li>Detect lane pixels and fit to find the lane boundary.</li>
+      <li>Determine the curvature of the lane and vehicle position with respect to center.</li>
+      <li>Warp the detected lane boundaries back onto the original image.</li>
+      <li>Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.</li>
+    </ul>
+    <p>The images for camera calibration are stored in the folder called <code>camera_cal</code>.  The images in <code>test_images</code> are for testing your pipeline on single frames.  If you want to extract more test images from the videos, you can simply use an image writing method like <code>cv2.imwrite()</code>, i.e., you can read the video in frame by frame as usual, and for frames you want to save for later you can write to an image file.</p>
+    <p>To help the reviewer examine your work, please save examples of the output from each stage of your pipeline in the folder called <code>ouput_images</code>, and include a description in your writeup for the project of what each image shows.    The video called <code>project_video.mp4</code> is the video your pipeline should work well on.</p>
+  </body>
+</html>
