@@ -24,19 +24,31 @@ td, h1, h2, h3, h4, h5, p, ul, ol, li {
     <h4>Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.</h4>
     <p>The provided chessboard pictures first converted to grayscale. Then with the opencv function each corner of the chessboard is found.
 <img src="./output_images/chessboard_calibration.png" alt="alt text" title="Chessboard calibration" />
-Since the distance of the each corner of a chessboard should be equal, the image is adjusted with this information via opencv function. The result of the calibration is below:
+Since the distance of the each corner of a chessboard should be equal, the image is adjusted with this information via opencv function.</p>
+    <h1>Pipeline (test images)</h1>
+    <h4>Provide an example of a distortion-corrected image.</h4>
+    <p>The following image shows clearly the effect of distortion correction.
 <img src="./output_images/undistort.png" alt="alt text" title="Undistorting the image" /></p>
-    <ul>
-      <li>Compute the camera calibration matrix and distortion coefficients given a set of chessboard images.</li>
-      <li>Apply a distortion correction to raw images.</li>
-      <li>Use color transforms, gradients, etc., to create a thresholded binary image.</li>
-      <li>Apply a perspective transform to rectify binary image ("birds-eye view").</li>
-      <li>Detect lane pixels and fit to find the lane boundary.</li>
-      <li>Determine the curvature of the lane and vehicle position with respect to center.</li>
-      <li>Warp the detected lane boundaries back onto the original image.</li>
-      <li>Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.</li>
-    </ul>
-    <p>The images for camera calibration are stored in the folder called <code>camera_cal</code>.  The images in <code>test_images</code> are for testing your pipeline on single frames.  If you want to extract more test images from the videos, you can simply use an image writing method like <code>cv2.imwrite()</code>, i.e., you can read the video in frame by frame as usual, and for frames you want to save for later you can write to an image file.</p>
-    <p>To help the reviewer examine your work, please save examples of the output from each stage of your pipeline in the folder called <code>ouput_images</code>, and include a description in your writeup for the project of what each image shows.    The video called <code>project_video.mp4</code> is the video your pipeline should work well on.</p>
+    <h4>Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image. Provide an example of a binary image result.</h4>
+    <p>The common points of sobelx and sobely is combined since the lanes can appear on both of them clearly. With taking only common points, some of the distortion is removed. The same idea is used for magnitude and direction of the gradients. Since the lanes are expected in a certain angle, this information is utilized. However this information alone is too noisy. To remove it, the magnitude of the each gradient is also thresholded and only common points are used. On some sections of the road, color is really helpful since it doesn't affect from shadows etc. Because of this, HLS and Lab colorspaces is used to get the lines.
+The three combined images are also combined to add up all information from each combination. Few of the examples are given below. The results can be seen under output_images folder or in the LaneFinder.ipynb
+<img src="./output_images/gradx.png" alt="alt text" title="Sobel x" /><img src="./output_images/grady.png" alt="alt text" title="Sobel y" /><img src="./output_images/gradmag.png" alt="alt text" title="Magnitude of gradient" /><img src="./output_images/graddir.png" alt="alt text" title="Direction of the gradient" /></p>
+    <h4>Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.</h4>
+    <p>On one of the corrected images with straight lanes, four points on the lanes are chosen. They are ([574,466],[710,466],[1069,701],[232,701]). Then, another four points are chosen to create a shape of a rectangle. These settings can be found in the function called as warpSettings. The result of this function can be seen below, applied to a combined binary image and the original image.
+<img src="./output_images/binarywarp.png" alt="alt text" title="Warped binary" /></p>
+    <h4>Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?</h4>
+    <p>First, bottom half of the image is taken, and a histogram of number of active pixels on the y direction is calculated. On the histogram graph, maxima points are found and those are assumed as the mean of the lanes. Then the total image is divided in 9 regions. For each region, a small margin of pixels above the mean value is activated as the lane pixels. For the next region, mean of the previous region is used, so if there is a curvature, the windows also slide with the lanes on the image. Then, on the activated pixels, a second degree polynomial fit is used to find the equation of the lane. An example image of the process can be seen below.
+<img src="./output_images/window_search.png" alt="alt text" title="Lane finding" /></p>
+    <h4>Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.</h4>
+    <p>Two separate functions are created for this purpose. To calculate the radius of curvature, the formula used can be seen <a target="_blank" href="https://www.intmath.com/applications-differentiation/8-radius-curvature.php">here.</a>
+Since it is a second degree polynomial, calculating it's first and second degree derivatives are easy. For the vehicle's position it is assumed that the camera is attached in the center of the vehicle which means that if the center of the image aligns with the center of the lane, the distance is zero. The number of pixels are calculated between the center of the image and the left and right lanes. Since the width of the lane is already known approximately, this information has been used to check the validty of the road. If the number of pixels are too high from the expected value, it means the lanes are not correct.
+The only problem is, the values are in pixel, and to make sense we need meters. For conversion, known width of the lane, and length of a one lane mark is used. The pixel to meter rates are calculated by counting the pixels and using the real values in meters.</p>
+    <h4>Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.</h4>
+    <p>
+      <img src="./output_images/result_image.png" alt="alt text" title="Result of the process" />
+    </p>
+    <h1>Pipeline (video)</h1>
+    <h4>Provide a link to your final video output. Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!)</h4>
+    <p>The final video is <a target="_blank" href="./output_images/project_result.mp4">here.</a></p>
   </body>
 </html>
